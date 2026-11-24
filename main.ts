@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -32,6 +32,11 @@ function main(): void {
   const outputPath = process.env.OUTPUT_PATH
     ? resolve(process.env.OUTPUT_PATH)
     : "/output/entry.png";
+
+  if (!existsSync(sourcePath)) {
+    console.error(`entry.png not found at ${sourcePath}`);
+    process.exit(1);
+  }
 
   const data = readFileSync(sourcePath);
   const { width, height } = validatePng(data);
